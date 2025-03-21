@@ -1,0 +1,83 @@
+Sensor1 allocated CPU:44%, Memory:4GB at 2025-03-18 16:09:50
+Camera1 allocated CPU:46%, Memory:3GB at 2025-03-18 16:09:50
+SecurityCam allocated CPU:90%, Memory:8GB at 2025-03-18 16:09:50
+Sensor1 allocated CPU:35%, Memory:4GB at 2025-03-18 16:09:51
+Camera1 allocated CPU:49%, Memory:7GB at 2025-03-18 16:09:51
+SecurityCam allocated CPU:90%, Memory:8GB at 2025-03-18 16:09:51
+camera allocated CPU:40%, Memory:2GB at 2025-03-18 16:10:18
+Sensor1 allocated CPU:2%, Memory:2GB at 2025-03-18 16:14:49
+Camera1 allocated CPU:90%, Memory:7GB at 2025-03-18 16:14:49
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-18 16:14:49
+Summary: Total CPU 182% across 3 devices at 2025-03-18 16:14:49
+Sensor1 allocated CPU:1%, Memory:4GB at 2025-03-18 16:14:50
+Camera1 allocated CPU:87%, Memory:7GB at 2025-03-18 16:14:50
+SecurityCam allocated CPU:90%, Memory:6GB at 2025-03-18 16:14:50
+Summary: Total CPU 178% across 3 devices at 2025-03-18 16:14:50
+SecurityCam allocated CPU:95%, Memory:5GB at 2025-03-18 16:16:09
+Summary: Total CPU 455% across 3 devices at 2025-03-18 16:16:09
+Sensor1 allocated CPU:85%, Memory:6GB at 2025-03-19 01:26:08
+Camera1 allocated CPU:10%, Memory:5GB at 2025-03-19 01:26:08
+SecurityCam allocated CPU:23%, Memory:4GB at 2025-03-19 01:26:08
+Summary: Total CPU 118% across 3 devices at 2025-03-19 01:26:08
+Sensor1 allocated CPU:64%, Memory:6GB at 2025-03-19 01:26:09
+Camera1 allocated CPU:1%, Memory:5GB at 2025-03-19 01:26:09
+SecurityCam allocated CPU:33%, Memory:8GB at 2025-03-19 01:26:09
+Summary: Total CPU 98% across 3 devices at 2025-03-19 01:26:09
+sohamsensor1 allocated CPU:40%, Memory:3GB at 2025-03-19 01:27:16
+Summary: Total CPU 256% across 3 devices at 2025-03-19 01:27:16
+Sensor1 allocated CPU:55%, Memory:4GB at 2025-03-19 01:33:00
+Camera1 allocated CPU:42%, Memory:3GB at 2025-03-19 01:33:00
+SecurityCam allocated CPU:31%, Memory:4GB at 2025-03-19 01:33:00
+Summary: Total CPU 128% across 3 devices at 2025-03-19 01:33:00
+Sensor1 allocated CPU:73%, Memory:6GB at 2025-03-19 01:33:01
+Camera1 allocated CPU:58%, Memory:5GB at 2025-03-19 01:33:01
+SecurityCam allocated CPU:1%, Memory:8GB at 2025-03-19 01:33:01
+Summary: Total CPU 132% across 3 devices at 2025-03-19 01:33:01
+sahilsenor1 allocated CPU:40%, Memory:4GB at 2025-03-19 01:34:43
+Summary: Total CPU 300% across 3 devices at 2025-03-19 01:34:43
+Sensor1 allocated CPU:27%, Memory:4GB at 2025-03-19 11:29:50
+Camera1 allocated CPU:87%, Memory:3GB at 2025-03-19 11:29:50
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-19 11:29:50
+Summary: Total CPU 204% across 3 devices at 2025-03-19 11:29:50
+Sensor1 allocated CPU:42%, Memory:6GB at 2025-03-19 11:29:51
+Camera1 allocated CPU:77%, Memory:3GB at 2025-03-19 11:29:51
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-19 11:29:51
+Summary: Total CPU 209% across 3 devices at 2025-03-19 11:29:51
+Sensor1 allocated CPU:75%, Memory:4GB at 2025-03-19 11:50:36
+Camera1 allocated CPU:85%, Memory:7GB at 2025-03-19 11:50:36
+SecurityCam allocated CPU:3%, Memory:8GB at 2025-03-19 11:50:36
+Summary: Total CPU 163% across 3 devices at 2025-03-19 11:50:36
+Sensor1 allocated CPU:90%, Memory:6GB at 2025-03-19 11:50:37
+Camera1 allocated CPU:81%, Memory:3GB at 2025-03-19 11:50:37
+SecurityCam allocated CPU:1%, Memory:8GB at 2025-03-19 11:50:37
+Summary: Total CPU 172% across 3 devices at 2025-03-19 11:50:37
+ EntertainmentSystem allocated CPU:95%, Memory:4GB at 2025-03-19 11:54:37
+Summary: Total CPU 430% across 3 devices at 2025-03-19 11:54:37
+Sensor1 allocated CPU:90%, Memory:4GB at 2025-03-19 11:56:43
+Camera1 allocated CPU:67%, Memory:3GB at 2025-03-19 11:56:43
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-19 11:56:43
+Summary: Total CPU 247% across 3 devices at 2025-03-19 11:56:43
+Sensor1 allocated CPU:83%, Memory:4GB at 2025-03-19 11:56:44
+Camera1 allocated CPU:72%, Memory:3GB at 2025-03-19 11:56:44
+SecurityCam allocated CPU:90%, Memory:6GB at 2025-03-19 11:56:44
+Summary: Total CPU 245% across 3 devices at 2025-03-19 11:56:44
+WeatherStation allocated CPU:90%, Memory:6GB at 2025-03-19 11:57:07
+Summary: Total CPU 582% across 3 devices at 2025-03-19 11:57:07
+Sensor1 allocated CPU:17%, Memory:4GB at 2025-03-19 14:52:06
+Camera1 allocated CPU:90%, Memory:3GB at 2025-03-19 14:52:06
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-19 14:52:06
+Summary: Total CPU 197% across 3 devices at 2025-03-19 14:52:06
+Sensor1 allocated CPU:25%, Memory:4GB at 2025-03-19 14:52:07
+Camera1 allocated CPU:90%, Memory:5GB at 2025-03-19 14:52:07
+SecurityCam allocated CPU:90%, Memory:4GB at 2025-03-19 14:52:07
+Summary: Total CPU 205% across 3 devices at 2025-03-19 14:52:07
+rutja  allocated CPU:60%, Memory:5GB at 2025-03-19 14:52:49
+Summary: Total CPU 462% across 3 devices at 2025-03-19 14:52:49
+Sensor1 allocated CPU:86%, Memory:4GB at 2025-03-20 11:07:35
+Camera1 allocated CPU:88%, Memory:7GB at 2025-03-20 11:07:35
+SecurityCam allocated CPU:18%, Memory:4GB at 2025-03-20 11:07:35
+Summary: Total CPU 192% across 3 devices at 2025-03-20 11:07:35
+Sensor1 allocated CPU:64%, Memory:2GB at 2025-03-20 11:07:36
+Camera1 allocated CPU:90%, Memory:5GB at 2025-03-20 11:07:36
+SecurityCam allocated CPU:1%, Memory:6GB at 2025-03-20 11:07:36
+Summary: Total CPU 155% across 3 devices at 2025-03-20 11:07:36

@@ -1,0 +1,2 @@
+User1,2GB
+User2,1GB

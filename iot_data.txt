@@ -1,0 +1,4 @@
+EngineSensor,CPU:50%,Memory:2GB,2025-03-17 03:09
+CabinPressureSensor,CPU:80%,Memory:4GB,2025-03-17 03:10
+EntertainmentSystem,CPU:30%,Memory:1GB,2025-03-17 03:11
+WeatherStation,CPU:60%,Memory:3GB,2025-03-17 03:12
