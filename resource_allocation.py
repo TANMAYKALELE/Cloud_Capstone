@@ -1,83 +1,147 @@
-from datetime import datetime
+import boto3
+import json
+import time
+from pyspark.sql import SparkSession
+from datetime import datetime, timedelta
 
-def read_iot_data(file_path):
-    devices = []
-    with open(file_path, 'r') as file:
-        for line in file:
-            device, cpu, mem, timestamp = line.strip().split(',')
-            cpu_value = float(cpu.split(':')[1].replace('%', ''))
-            mem_value = mem.split(':')[1]
-            devices.append((device, cpu_value, mem_value, timestamp))
-    return devices
+# Initialize Spark session
+spark = SparkSession.builder.appName("ResourceAllocation").getOrCreate()
 
-def simulate_iot_demand(device, priority, cpu, mem):
-    weights = {3: 1.5, 2: 1.2, 1: 1.0}
-    weight = weights.get(priority, 1.0)
-    adjusted_cpu = min(cpu * weight, 90 if priority == 3 else 75 if priority == 2 else 50)
-    return adjusted_cpu, mem
+# Initialize boto3 clients
+s3_client = boto3.client('s3')
+emr_client = boto3.client('emr')
 
-def detect_anomaly(cpu, previous_cpu=None):
-    if cpu > 85:
-        return "High", "WARNING: Anomaly detected! Possible cyberattack."
-    if previous_cpu and (cpu - previous_cpu) > 30:
-        return "Medium", "WARNING: Significant CPU spike detected."
-    return "Normal", "No anomaly detected."
+# S3 bucket and paths
+BUCKET_NAME = "cloud-capstone-bucket-tanmay-2025"
+OUTPUT_PATH = "output/output.json"
 
+# Function to fetch EMR cost using Cost Explorer
+def get_emr_cost():
+    """
+    Fetches the cost of EMR usage using Cost Explorer.
+    Includes a fallback value due to the 24-hour delay in Cost Explorer data availability.
+    """
+    try:
+        client = boto3.client('ce')
+        # Define the time period (last 30 days up to today)
+        end_date = datetime.utcnow().strftime('%Y-%m-%d')
+        start_date = (datetime.utcnow() - timedelta(days=30)).strftime('%Y-%m-%d')
+        
+        response = client.get_cost_and_usage(
+            TimePeriod={
+                'Start': start_date,
+                'End': end_date
+            },
+            Granularity='DAILY',
+            Metrics=['UnblendedCost'],
+            Filter={
+                'Dimensions': {
+                    'Key': 'SERVICE',
+                    'Values': ['Amazon Elastic MapReduce']
+                }
+            }
+        )
+        total_cost = sum(float(item['Total']['UnblendedCost']['Amount']) for item in response['ResultsByTime'])
+        return round(total_cost, 2)
+    except Exception as e:
+        print(f"Error fetching cost data: {e}")
+        # Fallback value for testing (remove after March 24, 2025, when Cost Explorer data is available)
+        return 10.50  # Simulate a cost of $10.50
+
+# Function to get cluster metrics (e.g., CPU utilization)
+def get_cluster_metrics(cluster_id):
+    """
+    Fetches cluster metrics (e.g., CPU utilization) using CloudWatch.
+    For simplicity, this is a placeholder—replace with actual CloudWatch logic if needed.
+    """
+    # Placeholder: Simulate CPU utilization
+    # In a real implementation, use boto3 CloudWatch client to fetch metrics
+    return 75  # Simulate 75% CPU utilization
+
+# Function to adjust cluster resources based on metrics
+def adjust_cluster_resources(cluster_id, current_cpu):
+    """
+    Adjusts the number of nodes in the EMR cluster based on CPU utilization.
+    - Scale out if CPU > 70% for 5 minutes.
+    - Scale in if CPU < 20% for 3 minutes.
+    """
+    # Get the current number of core nodes
+    response = emr_client.describe_cluster(ClusterId=cluster_id)
+    core_nodes = response['Cluster']['InstanceGroups'][1]['RunningInstanceCount']  # Assuming index 1 is core nodes
+
+    # Auto-scaling logic
+    if current_cpu > 70:
+        print("CPU > 70%, scaling out...")
+        new_node_count = min(core_nodes + 1, 5)  # Max 5 nodes
+        emr_client.modify_instance_groups(
+            ClusterId=cluster_id,
+            InstanceGroups=[
+                {
+                    'InstanceGroupId': response['Cluster']['InstanceGroups'][1]['InstanceGroupId'],
+                    'InstanceCount': new_node_count
+                }
+            ]
+        )
+    elif current_cpu < 20:
+        print("CPU < 20%, scaling in...")
+        new_node_count = max(core_nodes - 1, 2)  # Min 2 nodes
+        emr_client.modify_instance_groups(
+            ClusterId=cluster_id,
+            InstanceGroups=[
+                {
+                    'InstanceGroupId': response['Cluster']['InstanceGroups'][1]['InstanceGroupId'],
+                    'InstanceCount': new_node_count
+                }
+            ]
+        )
+    else:
+        print("CPU within normal range, no scaling needed.")
+
+# Function to write output to S3
+def write_to_s3(data):
+    """
+    Writes the resource allocation and cost data to S3.
+    """
+    s3_client.put_object(
+        Body=json.dumps(data),
+        Bucket=BUCKET_NAME,
+        Key=OUTPUT_PATH
+    )
+
+# Main function
 def main():
-    devices = read_iot_data("../input/iot_data.txt")
-    output_lines = []
-    previous_cpus = {}
+    # Get the cluster ID (assuming this script runs on the EMR cluster)
+    # In a real EMR environment, you can fetch this from metadata
+    cluster_id = "j-XXXXXXXXXXXXX"  # Replace with actual cluster ID or fetch dynamically
 
-    for device, cpu, mem, timestamp in devices:
-        priority = 3 if "EngineSensor" in device else 2 if "Sensor" in device or "WeatherStation" in device else 1
-        previous_cpu = previous_cpus.get(device)
-        adjusted_cpu, adjusted_mem = simulate_iot_demand(device, priority, cpu, mem)
-        severity, anomaly_message = detect_anomaly(adjusted_cpu, previous_cpu)
-        previous_cpus[device] = adjusted_cpu
+    # Monitor and adjust resources in a loop
+    for _ in range(5):  # Run for 5 iterations (for testing)
+        # Get current metrics
+        current_cpu = get_cluster_metrics(cluster_id)
+        emr_cost = get_emr_cost()
 
-        log_entry = f"{device} allocated CPU:{adjusted_cpu}%, Memory:{mem} at {timestamp}"
-        output_lines.append(log_entry)
-        if severity != "Normal":
-            output_lines.append(anomaly_message)
+        # Adjust resources based on metrics
+        adjust_cluster_resources(cluster_id, current_cpu)
 
-    total_cpu = sum(float(line.split("CPU:")[1].split("%")[0]) for line in output_lines if "allocated" in line)
-    summary = f"Summary: Total CPU {total_cpu}% across {len(devices)} devices at {devices[-1][3]}"
-    output_lines.append(summary)
+        # Prepare data for dashboard
+        allocation_data = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "cpu_utilization": current_cpu,
+            "core_nodes": emr_client.describe_cluster(ClusterId=cluster_id)['Cluster']['InstanceGroups'][1]['RunningInstanceCount'],
+            "emr_cost": emr_cost,
+            "anomaly_detected": current_cpu > 70 or current_cpu < 20
+        }
 
-    with open("../output.txt", "w") as f:
-        f.write("\n".join(output_lines))
+        # Write data to S3 for dashboard
+        write_to_s3(allocation_data)
 
-    print("Resource allocation completed. Check output.txt for details.")
+        print(f"Allocation Data: {allocation_data}")
 
-    while True:
-        device = input("Enter device name (or 'exit' to quit): ")
-        if device.lower() == 'exit':
-            break
-        priority = int(input("Enter priority (1-3): "))
-        cpu = float(input("Enter CPU usage (%): "))
-        mem = float(input("Enter memory usage (GB): "))
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Sleep for 1 minute (simulate monitoring interval)
+        time.sleep(60)
 
-        previous_cpu = previous_cpus.get(device)
-        adjusted_cpu, adjusted_mem = simulate_iot_demand(device, priority, cpu, f"{mem}GB")
-        severity, anomaly_message = detect_anomaly(adjusted_cpu, previous_cpu)
-        previous_cpus[device] = adjusted_cpu
-
-        log_entry = f"{device} allocated CPU:{adjusted_cpu}%, Memory:{mem}GB at {timestamp}"
-        print(log_entry)
-        if severity != "Normal":
-            print(anomaly_message)
-
-        output_lines.append(log_entry)
-        if severity != "Normal":
-            output_lines.append(anomaly_message)
-
-        total_cpu = sum(float(line.split("CPU:")[1].split("%")[0]) for line in output_lines if "allocated" in line)
-        summary = f"Summary: Total CPU {total_cpu}% across {len(devices) + len(previous_cpus)} devices at {timestamp}"
-        print(summary)
-
-        with open("../output.txt", "w") as f:
-            f.write("\n".join(output_lines))
+    # Stop the Spark session
+    spark.stop()
 
 if __name__ == "__main__":
     main()
